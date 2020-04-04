@@ -1,57 +1,83 @@
+from typing import Tuple
 import numpy as np
 
-from .. import game
+import nxn_game.game.gameboard as gameboard
+import nxn_game.game.agent as agent
 
-def train_agent(player1, player2, rounds):
-  player1_wins = np.zeros(rounds)
-  player2_wins = np.zeros(rounds)
 
-  win_score = 3
+def train_agent(
+    player1: agent.Agent, player2: agent.Agent, rounds: int
+) -> Tuple[np.array, np.array]:
+    """
+    Train the bots! Make two bots play against each other for X rounds.
+    Makes for a smarter bot to play against :)
 
-  for i in range(rounds):
-    board = game.Gameboard()
-    symbol_map = board.symbols
-    print(f"starting round {i+1}")
-    while board.winner is None:
-      for player in [player1, player2]:
+    Args:
+        ``player1`` (`agent.Agent`): first bot instance
+        ``player2`` (`agent.Agent`): second bot instance
+        ``rounds`` (`int`): number of rounds for play
+
+    Returns:
+        `tuple`: Number of wins for player one and player two
+    """
+    player1_wins = np.zeros(rounds)
+    player2_wins = np.zeros(rounds)
+
+    win_score = 3
+
+    for i in range(rounds):
+        board = gameboard.Gameboard()
+        symbol_map = board.symbols
+        print(f"starting round {i+1}")
+        while board.winner is None:
+            for player in [player1, player2]:
+                move = player.move(board)
+                board.update_board(move[0], move[1], symbol_map[player.symbol])
+                player.update_move_history(board.get_hash())
+                winner = board.check_win(win_score)
+
+                # in case player one fills last spot
+                if board.winner is not None:
+                    break
+
+        if winner and board.winner == player1.symbol:
+            player1.reward(1)
+            player2.reward(-1)
+            player1_wins[i] = 1
+        elif winner and board.winner == player2.symbol:
+            player1.reward(-1)
+            player2.reward(1)
+            player2_wins[i] = 1
+        elif not winner and board.winner == 0:
+            player1.reward(-1)
+            player2.reward(-1)
+
+        player1.reset()
+        player2.reset()
+
+    return player1_wins, player2_wins
+
+
+def agent_move(player: agent.Agent, board: gameboard.Gameboard) -> None:
+    """
+    Creates move for bot, updates history, checks for win, and updates
+    reward as necessary.
+
+    Args:
+        ``player`` (`agent.Agent`): player instance, in this case the bot
+        ``board`` (`gameboard.Gameboard`): game board instance
+    """
+    if board.winner is None:
         move = player.move(board)
-        board.update_board(move[0], move[1], symbol_map[player.symbol])
+        board.update_board(move[0], move[1], player.symbol)
         player.update_move_history(board.get_hash())
-        winner = board.check_win(win_score)
 
-        # in case player one fills last spot
-        if board.winner is not None:
-          break
+    board.str_rep()
+    win = board.check_win(3)
 
-    if winner and board.winner == player1.symbol:
-      player1.reward(1)
-      player2.reward(-1)
-      player1_wins[i] = 1
-    elif winner and board.winner == player2.symbol:
-      player1.reward(-1)
-      player2.reward(1)
-      player2_wins[i] = 1
-    elif not winner and board.winner == 0:
-      player1.reward(-1)
-      player2.reward(-1)
-
-    player1.reset()
-    player2.reset()
-
-  return player1_wins, player2_wins
-
-def agent_move(player, board):
-  if board.winner is None:
-    move = player.move(board)
-    board.update_board(move[0], move[1], player.symbol)
-    player.update_move_history(board.get_hash())
-
-  board.str_rep()
-  win = board.check_win(3)
-
-  if win and board.winner == player.symbol:
-    player.reward(1)
-    player.reset()
-  else:
-    player.reward(-1)
-    player.reset()
+    if win and board.winner == player.symbol:
+        player.reward(1)
+        player.reset()
+    else:
+        player.reward(-1)
+        player.reset()

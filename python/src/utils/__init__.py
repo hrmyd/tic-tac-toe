@@ -1,1 +1,1 @@
-from . import play # noqa
+from . import play  # noqa
