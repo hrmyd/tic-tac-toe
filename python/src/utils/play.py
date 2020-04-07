@@ -60,7 +60,7 @@ def train_agent(
 
 def agent_move(
     player: agent.Agent, board: gameboard.Gameboard, board_type: str = "string"
-) -> None:
+) -> Tuple[np.array, bool]:
     """
     Creates move for bot, updates history, checks for win, and updates
     reward as necessary.
@@ -68,6 +68,9 @@ def agent_move(
     Args:
         ``player`` (`agent.Agent`): player instance, in this case the bot
         ``board`` (`gameboard.Gameboard`): game board instance
+
+    Returns:
+        `tuple`: moves for bot and if winning move
     """
     if board.winner is None:
         move = player.move(board)
@@ -82,8 +85,11 @@ def agent_move(
     if win and board.winner == player.symbol:
         player.reward(1)
         player.reset()
-    else:
+    elif win and board.winner != player.symbol:
+        player.reward(-1)
+        player.reset()
+    elif not win and board.winner == 0:
         player.reward(-1)
         player.reset()
 
-    return move
+    return move, win

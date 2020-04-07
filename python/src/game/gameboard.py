@@ -5,7 +5,9 @@ import pandas as pd
 
 
 class Gameboard:
-    def __init__(self, n_rows: int = 3, n_cols: int = 3) -> None:
+    def __init__(
+        self, n_rows: int = 3, n_cols: int = 3, board_type: str = "string"
+    ) -> None:
         """
         Args:
             ``n_rows`` (`int`): rows to initialize gameboard
@@ -88,7 +90,7 @@ class Gameboard:
             or x_win in [left_diag_score, right_diag_score]
         ):
             self.winner = 1
-            print("game over, X wins")
+            # print("game over, X wins")
 
             return True
 
@@ -99,14 +101,14 @@ class Gameboard:
             or o_win in [left_diag_score, right_diag_score]
         ):
             self.winner = -1
-            print("game over, O wins")
+            # print("game over, O wins")
             return True
 
         # check if draw
         if 0 not in self.board:
             self.draw = True
             self.winner = 0
-            print("game over, draw")
+            # print("game over, draw")
             return False
 
         return False

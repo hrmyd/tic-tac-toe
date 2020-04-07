@@ -10,9 +10,11 @@ class Player:
 
     def make_move(
         self, row: int, col: int, board: Gameboard, board_type: str = "string"
-    ) -> None:
+    ) -> bool:
         board.update_board(row, col, self.symbol)
 
         if board_type == "string":
             board.str_rep()
-        board.check_win(3)
+        win = board.check_win(3)
+
+        return win

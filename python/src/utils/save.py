@@ -7,7 +7,7 @@ import nxn_game.game.agent as agent
 
 def load_agent(f_name: str) -> agent.Agent:
     """
-    load in an agent from gcp bucket
+    load in an agent
 
     Args:
         ``f_name`` (`str`): file name of bot to load
@@ -18,7 +18,7 @@ def load_agent(f_name: str) -> agent.Agent:
 
 def save_agent(f_name: str, agent: agent.Agent) -> None:
     """
-    save agent to gcp bucket
+    save agent
 
     Args:
         ``f_name`` (`str`): name of file
