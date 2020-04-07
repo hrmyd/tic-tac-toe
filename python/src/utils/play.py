@@ -58,7 +58,9 @@ def train_agent(
     return player1_wins, player2_wins
 
 
-def agent_move(player: agent.Agent, board: gameboard.Gameboard) -> None:
+def agent_move(
+    player: agent.Agent, board: gameboard.Gameboard, board_type: str = "string"
+) -> None:
     """
     Creates move for bot, updates history, checks for win, and updates
     reward as necessary.
@@ -72,7 +74,9 @@ def agent_move(player: agent.Agent, board: gameboard.Gameboard) -> None:
         board.update_board(move[0], move[1], player.symbol)
         player.update_move_history(board.get_hash())
 
-    board.str_rep()
+    if board_type == "string":
+        board.str_rep()
+
     win = board.check_win(3)
 
     if win and board.winner == player.symbol:
@@ -81,3 +85,5 @@ def agent_move(player: agent.Agent, board: gameboard.Gameboard) -> None:
     else:
         player.reward(-1)
         player.reset()
+
+    return move
