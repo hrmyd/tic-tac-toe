@@ -1,5 +1,5 @@
 from typing import Tuple
-import logging 
+import logging
 
 import numpy as np
 

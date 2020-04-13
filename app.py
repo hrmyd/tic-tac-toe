@@ -22,6 +22,7 @@ WEB_PLAYER = game.player.Player(symbol=-1)
 GAMEBOARD = game.gameboard.Gameboard()
 BOT_PLAYER = utils.files.load_agent("3x3_bot")
 
+
 @app.route("api/player", methods=["POST"])
 def player_move():
     moves = request.get_json(force=True, cache=False)

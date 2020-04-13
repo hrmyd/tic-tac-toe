@@ -8,6 +8,7 @@ from nxn_game.game import agent
 
 logging.getLogger().setLevel(logging.INFO)
 
+
 def main():
     training_rounds = 5000
     agent_one = agent.Agent(symbol=1)  # the one we'll save

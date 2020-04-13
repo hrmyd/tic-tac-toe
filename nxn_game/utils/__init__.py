@@ -1,2 +1,2 @@
 from . import play  # noqa
-from . import files # noqa
+from . import files  # noqa
