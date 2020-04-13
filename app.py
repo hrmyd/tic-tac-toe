@@ -1,5 +1,7 @@
 import os
+
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 
 import numpy as np
 
@@ -7,7 +9,7 @@ import nxn_game.game as game
 import nxn_game.utils as utils
 
 app = Flask(__name__)
-
+CORS(app)
 
 ### Symbols for board.winner
 # 1 = bot
@@ -18,10 +20,9 @@ app = Flask(__name__)
 
 WEB_PLAYER = game.player.Player(symbol=-1)
 GAMEBOARD = game.gameboard.Gameboard()
-BOT_PLAYER = utils.save.load_agent("3x3_bot")
+BOT_PLAYER = utils.files.load_agent("3x3_bot")
 
-
-@app.route("/player", methods=["POST"])
+@app.route("api/player", methods=["POST"])
 def player_move():
     moves = request.get_json(force=True, cache=False)
     win = WEB_PLAYER.make_move(moves["row"], moves["col"], GAMEBOARD, "raw")
@@ -30,7 +31,7 @@ def player_move():
     return jsonify(win=win, winner=winner)
 
 
-@app.route("/bot", methods=["GET"])
+@app.route("api/bot", methods=["GET"])
 def bot_move():
     moves, win = utils.play.agent_move(BOT_PLAYER, GAMEBOARD, "raw")
     winner = GAMEBOARD.winner
@@ -39,4 +40,4 @@ def bot_move():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, host="0.0.0.0", port=80)

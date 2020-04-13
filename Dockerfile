@@ -12,4 +12,4 @@ RUN pip3 install -r requirements.txt
 # webserver, with one worker process and 8 threads.
 # For environments with multiple CPU cores, increase the number of workers
 # to be equal to the cores available.
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 app:app
+CMD exec gunicorn --bind :8080 --workers 1 --threads 4 app:app

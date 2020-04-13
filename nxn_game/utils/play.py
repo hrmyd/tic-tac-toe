@@ -1,4 +1,6 @@
 from typing import Tuple
+import logging 
+
 import numpy as np
 
 import nxn_game.game.gameboard as gameboard
@@ -28,7 +30,7 @@ def train_agent(
     for i in range(rounds):
         board = gameboard.Gameboard()
         symbol_map = board.symbols
-        print(f"starting round {i+1}")
+        # logging.info(f"starting round {i+1}")
         while board.winner is None:
             for player in [player1, player2]:
                 move = player.move(board)
@@ -55,6 +57,7 @@ def train_agent(
         player1.reset()
         player2.reset()
 
+    logging.info(f"trained with {rounds} rounds.")
     return player1_wins, player2_wins
 
 

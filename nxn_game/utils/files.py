@@ -1,4 +1,5 @@
 import os
+import logging
 
 import dill
 
@@ -13,7 +14,10 @@ def load_agent(f_name: str) -> agent.Agent:
         ``f_name`` (`str`): file name of bot to load
     """
     full_file_name = f"models/{f_name}.pkl"
-    dill.load(agent, full_file_name)
+    with open(full_file_name, "rb") as f:
+        bot = dill.load(f)
+
+    return bot
 
 
 def save_agent(f_name: str, agent: agent.Agent) -> None:
@@ -26,6 +30,7 @@ def save_agent(f_name: str, agent: agent.Agent) -> None:
     """
     full_file_name = f"models/{f_name}.pkl"
 
-    dill.dump(agent, full_file_name)
+    with open(full_file_name, "wb") as f:
+        dill.dump(agent, f)
 
-    print(f"model {f_name} successfully saved.")
+    logging.info(f"model {f_name} successfully saved.")
