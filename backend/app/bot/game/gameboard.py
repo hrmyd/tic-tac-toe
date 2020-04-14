@@ -6,16 +6,24 @@ import pandas as pd
 
 class Gameboard:
     def __init__(
-        self, n_rows: int = 3, n_cols: int = 3, board_type: str = "string"
+        self,
+        board_id: int,
+        n_rows: int = 3,
+        n_cols: int = 3,
+        win_score: int = 3,
+        board_type: str = "string",
     ) -> None:
         """
         Args:
             ``n_rows`` (`int`): rows to initialize gameboard
             ``n_cols`` (`int`): columns to initialize gameboard
+            ``win_score`` (`int`): score needed to win
         """
         self.n_rows = n_rows
         self.n_cols = n_cols
         self.board = np.zeros((self.n_rows, self.n_cols))
+        self.win_score = win_score
+        self.board_id = board_id
         self.symbols = {0: " ", 1: "X", -1: "O"}
         self.symbols_rev = {" ": 0, "X": 1, "O": -1}
         self.winner = None
@@ -61,16 +69,13 @@ class Gameboard:
         else:
             print("move not valid, space not empty")
 
-    def check_win(self, win_score: int) -> bool:
+    def check_win(self) -> bool:
         """
         check diagonals, rows, and columns for win_score (+ or -) or draw.
 
         # TODO: add check to make sure if win_score < n_rows or n_cols,
                 that values are next to each other
 
-        Args:
-            ``win_score`` (`int`): score needed to win
-        
         Returns:
             `bool`: True if a player won, False if no win or a draw
         """
@@ -80,8 +85,8 @@ class Gameboard:
         row_sums = np.sum(self.board, axis=1)
         col_sums = np.sum(self.board, axis=0)
 
-        x_win = win_score
-        o_win = win_score * -1
+        x_win = self.win_score
+        o_win = self.win_score * -1
 
         # check if x wins
         if (

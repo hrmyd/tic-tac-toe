@@ -19,17 +19,25 @@ app = FastAPI(title="Tic Tac Toe")
 # 2 = no end game
 
 WEB_PLAYER = game.player.Player(symbol=-1)
-GAMEBOARD = game.gameboard.Gameboard()
+GAMEBOARDS = {}
 BOT_PLAYER = utils.files.load_agent("3x3_bot")
+
+
+class BoardInit(BaseModel):
+    rows: int
+    cols: int
+    score: int
 
 
 class PlayerMoves(BaseModel):
     row: int
     col: int
 
+
 class PlayerResponse(BaseModel):
     win: bool
     winner: int
+
 
 class BotResponse(BaseModel):
     win: bool
@@ -38,15 +46,32 @@ class BotResponse(BaseModel):
     col: int
 
 
+class MakeMove(BaseModel):
+    player: PlayerResponse
+    bot: BotResponse
+
+
 @app.get("/")
 def read_root():
     return {"player symbol": WEB_PLAYER.symbol}
 
 
-@app.post("/move/player", response_model=PlayerResponse)
-def player_move(moves: PlayerMoves):
-    win = WEB_PLAYER.make_move(moves.row, moves.col, GAMEBOARD, "raw")
-    winner = GAMEBOARD.winner
+@app.post("/new-game")
+def initialize_game(*, game_id: int, board_features: BoardInit):
+    gameboard = game.gameboard.Gameboard(
+        board_id=game_id,
+        n_rows=board_features.rows,
+        n_cols=board_features.cols,
+        win_score=board_features.score,
+    )
+    GAMEBOARDS[game_id] = gameboard
+
+
+@app.post("/move/player/{game_id}", response_model=PlayerResponse)
+def player_move(*, game_id: int, moves: PlayerMoves):
+    board = GAMEBOARDS[game_id]
+    win = WEB_PLAYER.make_move(moves.row, moves.col, board, "raw")
+    winner = board.winner
 
     if winner is None:
         winner = 2
@@ -54,10 +79,11 @@ def player_move(moves: PlayerMoves):
     return {"win": win, "winner": winner}
 
 
-@app.post("/move/bot", response_model=BotResponse)
-def bot_move():
-    moves, win = utils.play.agent_move(BOT_PLAYER, GAMEBOARD, "raw")
-    winner = GAMEBOARD.winner
+@app.post("/move/bot/{game_id}", response_model=BotResponse)
+def bot_move(game_id: int):
+    board = GAMEBOARDS[game_id]
+    moves, win = utils.play.agent_move(BOT_PLAYER, board, "raw")
+    winner = board.winner
 
     if winner is None:
         winner = 2
