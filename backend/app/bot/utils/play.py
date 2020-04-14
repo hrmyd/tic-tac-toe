@@ -3,8 +3,8 @@ import logging
 
 import numpy as np
 
-import nxn_game.game.gameboard as gameboard
-import nxn_game.game.agent as agent
+
+from ..game import gameboard, agent
 
 
 def train_agent(

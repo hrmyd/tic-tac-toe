@@ -9,6 +9,4 @@ run:
 kill:
 	@echo 'Killing container...'
 	@docker ps | grep $(app_name) | awk '{print $$1}' | xargs docker
-
-train:
-	python3 scripts/train_deploy_model.py
+	
