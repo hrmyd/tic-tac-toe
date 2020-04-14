@@ -4,7 +4,7 @@ build:
 	@docker build -t $(app_name) .
 
 run:
-	@docker run --detach -p 80:80 $(app_name)
+	@docker run -d -p 80:80 $(app_name)
 
 kill:
 	@echo 'Killing container...'
