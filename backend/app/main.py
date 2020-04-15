@@ -56,7 +56,7 @@ def read_root():
     return {"player symbol": WEB_PLAYER.symbol}
 
 
-@app.post("/new-game")
+@app.post("/new-game/{game_id}")
 def initialize_game(*, game_id: int, board_features: BoardInit):
     gameboard = game.gameboard.Gameboard(
         board_id=game_id,
