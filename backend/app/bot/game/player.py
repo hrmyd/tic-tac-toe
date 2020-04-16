@@ -15,6 +15,6 @@ class Player:
 
         if board_type == "string":
             board.str_rep()
-        win = board.check_win(3)
+        win = board.check_win()
 
         return win

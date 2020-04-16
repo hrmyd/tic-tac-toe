@@ -10,7 +10,12 @@ import numpy as np
 from .bot import game, utils
 
 ### initialize app
-app = FastAPI(title="Tic Tac Toe")
+app = FastAPI(
+    title="Tic Tac Toe",
+    description="adventures in python APIs and javascript",
+    docs_url=None,
+    redoc_url="/docs",
+)
 
 ### Symbols for board.winner
 # 1 = bot
@@ -44,11 +49,6 @@ class BotResponse(BaseModel):
     winner: int
     row: int
     col: int
-
-
-class MakeMove(BaseModel):
-    player: PlayerResponse
-    bot: BotResponse
 
 
 @app.get("/")
@@ -89,3 +89,11 @@ def bot_move(game_id: int):
         winner = 2
 
     return {"row": int(moves[0]), "col": int(moves[1]), "win": win, "winner": winner}
+
+
+@app.get("/game-over/{game_id}")
+def game_over(game_id: int):
+    board = GAMEBOARDS[game_id]
+    board.reset()
+
+    return {"status": "gameboard reset, let's play again"}

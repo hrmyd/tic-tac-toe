@@ -28,7 +28,7 @@ def train_agent(
     win_score = 3
 
     for i in range(rounds):
-        board = gameboard.Gameboard()
+        board = gameboard.Gameboard(0)
         symbol_map = board.symbols
         # logging.info(f"starting round {i+1}")
         while board.winner is None:
@@ -36,7 +36,7 @@ def train_agent(
                 move = player.move(board)
                 board.update_board(move[0], move[1], symbol_map[player.symbol])
                 player.update_move_history(board.get_hash())
-                winner = board.check_win(win_score)
+                winner = board.check_win()
 
                 # in case player one fills last spot
                 if board.winner is not None:
@@ -83,7 +83,7 @@ def agent_move(
     if board_type == "string":
         board.str_rep()
 
-    win = board.check_win(3)
+    win = board.check_win()
 
     if win and board.winner == player.symbol:
         player.reward(1)
