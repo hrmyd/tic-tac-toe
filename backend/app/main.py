@@ -1,5 +1,6 @@
 import os
 import logging
+from enum import Enum
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,6 +16,16 @@ app = FastAPI(
     description="adventures in python APIs and javascript",
     docs_url=None,
     redoc_url="/docs",
+)
+
+origins = ["https://tic-tac-toe.hrmyd.me/"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 ### Symbols for board.winner
