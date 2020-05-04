@@ -1,3 +1,5 @@
+[![Build Status](https://semaphoreci.com/api/v1/hrmyd/tic-tac-toe-2/branches/master/badge.svg)](https://semaphoreci.com/hrmyd/tic-tac-toe-2)
+
 # tic-tac-toe
 playing around with using numpy, q-learning, and deployment.
 
