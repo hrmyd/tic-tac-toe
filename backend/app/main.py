@@ -18,7 +18,7 @@ app = FastAPI(
     redoc_url="/docs",
 )
 
-origins = ["https://tic-tac-toe.hrmyd.me/"]
+origins = ["https://tic-tac-toe.hrmyd.me/", "https://bot-api.hrmyd.me/"]
 
 app.add_middleware(
     CORSMiddleware,
